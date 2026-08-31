@@ -1,0 +1,1348 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stok Barang Dagangan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #166534;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 5px;
+            font-size: 25px;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 25px;
+            font-weight: bold;
+            color: #166534;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #166534;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        button {
+            padding: 11px;
+            border-radius: 7px;
+            border: 1px solid #cbd5e1;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #16a34a;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #166534;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #14532d;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #d97706;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        th {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .stok-aman {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .stok-sedikit {
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        .stok-habis {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .search {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .close {
+            font-size: 25px;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .info-box {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 800px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .card-value {
+                font-size: 20px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>📦 STOK BARANG DAGANGAN</h1>
+    <p>Sistem pencatatan barang masuk dan barang keluar</p>
+</header>
+
+<div class="container">
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+
+        <div class="card">
+            <div class="card-title">Jenis Barang</div>
+            <div class="card-value" id="totalJenis">0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Total Stok</div>
+            <div class="card-value" id="totalStok">0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Nilai Stok</div>
+            <div class="card-value" id="nilaiStok">Rp 0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Stok Menipis</div>
+            <div class="card-value" id="stokMenipis">0</div>
+        </div>
+
+    </div>
+
+
+    <!-- TAMBAH BARANG -->
+    <div class="section">
+
+        <h2>➕ Tambah / Edit Barang</h2>
+
+        <div class="info-box">
+            Nama barang, harga, dan batas stok dapat Anda ubah kapan saja.
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Nama Barang</label>
+                <input
+                    type="text"
+                    id="namaBarang"
+                    placeholder="Contoh: Air Mineral"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Harga Beli</label>
+                <input
+                    type="number"
+                    id="hargaBeli"
+                    placeholder="Contoh: 3000"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Harga Jual</label>
+                <input
+                    type="number"
+                    id="hargaJual"
+                    placeholder="Contoh: 5000"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Batas Stok Minimum</label>
+                <input
+                    type="number"
+                    id="stokMinimum"
+                    value="5"
+                >
+            </div>
+
+        </div>
+
+        <div class="button-row">
+            <button class="btn-primary" onclick="simpanBarang()">
+                💾 Simpan Barang
+            </button>
+
+            <button
+                class="btn-warning"
+                onclick="resetFormBarang()"
+            >
+                ↩ Reset
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- DAFTAR BARANG -->
+    <div class="section">
+
+        <h2>📋 Daftar Barang</h2>
+
+        <input
+            type="text"
+            id="searchBarang"
+            class="search"
+            placeholder="🔍 Cari nama barang..."
+            oninput="tampilkanBarang()"
+        >
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Barang</th>
+                        <th>Harga Beli</th>
+                        <th>Harga Jual</th>
+                        <th>Stok</th>
+                        <th>Nilai Stok</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelBarang"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRANSAKSI -->
+    <div class="section">
+
+        <h2>🔄 Transaksi Barang</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Jenis Transaksi</label>
+
+                <select id="jenisTransaksi">
+                    <option value="masuk">📥 Barang Masuk</option>
+                    <option value="keluar">📤 Barang Keluar</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Pilih Barang</label>
+
+                <select id="barangTransaksi"></select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Jumlah</label>
+
+                <input
+                    type="number"
+                    id="jumlahTransaksi"
+                    min="1"
+                    value="1"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Keterangan</label>
+
+                <input
+                    type="text"
+                    id="keteranganTransaksi"
+                    placeholder="Contoh: Pembelian dari supplier"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="button-row">
+
+            <button
+                class="btn-success"
+                onclick="prosesTransaksi()"
+            >
+                💾 Simpan Transaksi
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIWAYAT -->
+    <div class="section">
+
+        <h2>📜 Riwayat Transaksi</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Barang</th>
+                        <th>Jenis</th>
+                        <th>Jumlah</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelRiwayat"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL EDIT -->
+<div class="modal" id="modalEdit">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>Edit Barang</h2>
+
+            <span
+                class="close"
+                onclick="tutupModal()"
+            >
+                ×
+            </span>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Nama Barang</label>
+
+            <input
+                type="text"
+                id="editNama"
+            >
+
+        </div>
+
+        <br>
+
+        <div class="form-group">
+
+            <label>Harga Beli</label>
+
+            <input
+                type="number"
+                id="editHargaBeli"
+            >
+
+        </div>
+
+        <br>
+
+        <div class="form-group">
+
+            <label>Harga Jual</label>
+
+            <input
+                type="number"
+                id="editHargaJual"
+            >
+
+        </div>
+
+        <br>
+
+        <div class="form-group">
+
+            <label>Batas Stok Minimum</label>
+
+            <input
+                type="number"
+                id="editStokMinimum"
+            >
+
+        </div>
+
+        <div class="button-row">
+
+            <button
+                class="btn-primary"
+                onclick="simpanEdit()"
+            >
+                💾 Simpan Perubahan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+    ======================================================
+    DATA APLIKASI
+    ======================================================
+    */
+
+    let barang = JSON.parse(
+        localStorage.getItem("dataBarang")
+    ) || [
+
+        {
+            id: 1,
+            nama: "Air Mineral",
+            hargaBeli: 3000,
+            hargaJual: 5000,
+            stok: 20,
+            stokMinimum: 5
+        },
+
+        {
+            id: 2,
+            nama: "Mie Instan",
+            hargaBeli: 2500,
+            hargaJual: 4000,
+            stok: 30,
+            stokMinimum: 5
+        },
+
+        {
+            id: 3,
+            nama: "Kopi",
+            hargaBeli: 5000,
+            hargaJual: 8000,
+            stok: 15,
+            stokMinimum: 5
+        }
+
+    ];
+
+
+    let riwayat = JSON.parse(
+        localStorage.getItem("riwayatTransaksi")
+    ) || [];
+
+
+    let idEdit = null;
+
+
+    /*
+    ======================================================
+    SIMPAN DATA
+    ======================================================
+    */
+
+    function simpanData() {
+
+        localStorage.setItem(
+            "dataBarang",
+            JSON.stringify(barang)
+        );
+
+        localStorage.setItem(
+            "riwayatTransaksi",
+            JSON.stringify(riwayat)
+        );
+
+    }
+
+
+    /*
+    ======================================================
+    FORMAT RUPIAH
+    ======================================================
+    */
+
+    function rupiah(angka) {
+
+        return new Intl.NumberFormat(
+            "id-ID",
+            {
+                style: "currency",
+                currency: "IDR",
+                maximumFractionDigits: 0
+            }
+        ).format(angka);
+
+    }
+
+
+    /*
+    ======================================================
+    TAMBAH BARANG
+    ======================================================
+    */
+
+    function simpanBarang() {
+
+        const nama =
+            document.getElementById("namaBarang").value.trim();
+
+        const hargaBeli =
+            Number(document.getElementById("hargaBeli").value);
+
+        const hargaJual =
+            Number(document.getElementById("hargaJual").value);
+
+        const stokMinimum =
+            Number(document.getElementById("stokMinimum").value);
+
+
+        if (!nama) {
+
+            alert("Nama barang harus diisi.");
+
+            return;
+
+        }
+
+
+        if (hargaBeli < 0 || hargaJual < 0) {
+
+            alert("Harga tidak boleh negatif.");
+
+            return;
+
+        }
+
+
+        const dataBaru = {
+
+            id: Date.now(),
+
+            nama: nama,
+
+            hargaBeli: hargaBeli,
+
+            hargaJual: hargaJual,
+
+            stok: 0,
+
+            stokMinimum: stokMinimum
+
+        };
+
+
+        barang.push(dataBaru);
+
+        simpanData();
+
+        resetFormBarang();
+
+        tampilkanSemua();
+
+        alert("Barang berhasil ditambahkan.");
+
+    }
+
+
+    /*
+    ======================================================
+    RESET FORM
+    ======================================================
+    */
+
+    function resetFormBarang() {
+
+        document.getElementById("namaBarang").value = "";
+
+        document.getElementById("hargaBeli").value = "";
+
+        document.getElementById("hargaJual").value = "";
+
+        document.getElementById("stokMinimum").value = 5;
+
+    }
+
+
+    /*
+    ======================================================
+    TAMPILKAN BARANG
+    ======================================================
+    */
+
+    function tampilkanBarang() {
+
+        const tbody =
+            document.getElementById("tabelBarang");
+
+        const pencarian =
+            document
+                .getElementById("searchBarang")
+                .value
+                .toLowerCase();
+
+
+        tbody.innerHTML = "";
+
+
+        const hasil =
+            barang.filter(item =>
+                item.nama
+                    .toLowerCase()
+                    .includes(pencarian)
+            );
+
+
+        hasil.forEach((item, index) => {
+
+            let status = "";
+
+            let classStatus = "";
+
+
+            if (item.stok === 0) {
+
+                status = "HABIS";
+
+                classStatus = "stok-habis";
+
+            }
+
+            else if (item.stok <= item.stokMinimum) {
+
+                status = "MENIPIS";
+
+                classStatus = "stok-sedikit";
+
+            }
+
+            else {
+
+                status = "AMAN";
+
+                classStatus = "stok-aman";
+
+            }
+
+
+            const nilaiStok =
+                item.stok * item.hargaBeli;
+
+
+            tbody.innerHTML += `
+
+                <tr>
+
+                    <td>${index + 1}</td>
+
+                    <td>
+                        <strong>${item.nama}</strong>
+                    </td>
+
+                    <td>
+                        ${rupiah(item.hargaBeli)}
+                    </td>
+
+                    <td>
+                        ${rupiah(item.hargaJual)}
+                    </td>
+
+                    <td>
+                        <strong>${item.stok}</strong>
+                    </td>
+
+                    <td>
+                        ${rupiah(nilaiStok)}
+                    </td>
+
+                    <td class="${classStatus}">
+                        ${status}
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn-warning btn-small"
+                            onclick="editBarang(${item.id})"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            class="btn-danger btn-small"
+                            onclick="hapusBarang(${item.id})"
+                        >
+                            Hapus
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+    /*
+    ======================================================
+    EDIT BARANG
+    ======================================================
+    */
+
+    function editBarang(id) {
+
+        const item =
+            barang.find(x => x.id === id);
+
+
+        if (!item) return;
+
+
+        idEdit = id;
+
+
+        document.getElementById("editNama").value =
+            item.nama;
+
+        document.getElementById("editHargaBeli").value =
+            item.hargaBeli;
+
+        document.getElementById("editHargaJual").value =
+            item.hargaJual;
+
+        document.getElementById("editStokMinimum").value =
+            item.stokMinimum;
+
+
+        document.getElementById("modalEdit").style.display =
+            "flex";
+
+    }
+
+
+    /*
+    ======================================================
+    SIMPAN EDIT
+    ======================================================
+    */
+
+    function simpanEdit() {
+
+        const item =
+            barang.find(x => x.id === idEdit);
+
+
+        if (!item) return;
+
+
+        item.nama =
+            document.getElementById("editNama").value;
+
+        item.hargaBeli =
+            Number(document.getElementById("editHargaBeli").value);
+
+        item.hargaJual =
+            Number(document.getElementById("editHargaJual").value);
+
+        item.stokMinimum =
+            Number(document.getElementById("editStokMinimum").value);
+
+
+        simpanData();
+
+        tutupModal();
+
+        tampilkanSemua();
+
+        alert("Data barang berhasil diperbarui.");
+
+    }
+
+
+    /*
+    ======================================================
+    TUTUP MODAL
+    ======================================================
+    */
+
+    function tutupModal() {
+
+        document.getElementById("modalEdit").style.display =
+            "none";
+
+        idEdit = null;
+
+    }
+
+
+    /*
+    ======================================================
+    HAPUS BARANG
+    ======================================================
+    */
+
+    function hapusBarang(id) {
+
+        const item =
+            barang.find(x => x.id === id);
+
+
+        if (!item) return;
+
+
+        const yakin =
+            confirm(
+                `Hapus barang "${item.nama}"?`
+            );
+
+
+        if (!yakin) return;
+
+
+        barang =
+            barang.filter(x => x.id !== id);
+
+
+        simpanData();
+
+        tampilkanSemua();
+
+    }
+
+
+    /*
+    ======================================================
+    DROPDOWN BARANG
+    ======================================================
+    */
+
+    function updateDropdownBarang() {
+
+        const select =
+            document.getElementById("barangTransaksi");
+
+
+        select.innerHTML = "";
+
+
+        barang.forEach(item => {
+
+            const option =
+                document.createElement("option");
+
+
+            option.value = item.id;
+
+            option.textContent =
+                `${item.nama} (Stok: ${item.stok})`;
+
+
+            select.appendChild(option);
+
+        });
+
+    }
+
+
+    /*
+    ======================================================
+    TRANSAKSI
+    ======================================================
+    */
+
+    function prosesTransaksi() {
+
+        const jenis =
+            document.getElementById("jenisTransaksi").value;
+
+
+        const id =
+            Number(
+                document.getElementById("barangTransaksi").value
+            );
+
+
+        const jumlah =
+            Number(
+                document.getElementById("jumlahTransaksi").value
+            );
+
+
+        const keterangan =
+            document
+                .getElementById("keteranganTransaksi")
+                .value;
+
+
+        const item =
+            barang.find(x => x.id === id);
+
+
+        if (!item) {
+
+            alert("Silakan pilih barang.");
+
+            return;
+
+        }
+
+
+        if (jumlah <= 0) {
+
+            alert("Jumlah harus lebih dari 0.");
+
+            return;
+
+        }
+
+
+        /*
+        BARANG MASUK
+        */
+
+        if (jenis === "masuk") {
+
+            item.stok += jumlah;
+
+        }
+
+
+        /*
+        BARANG KELUAR
+        */
+
+        else {
+
+            if (jumlah > item.stok) {
+
+                alert(
+                    `Stok ${item.nama} tidak mencukupi.\n\n` +
+                    `Stok tersedia: ${item.stok}`
+                );
+
+                return;
+
+            }
+
+
+            item.stok -= jumlah;
+
+        }
+
+
+        /*
+        SIMPAN RIWAYAT
+        */
+
+        riwayat.unshift({
+
+            tanggal:
+                new Date().toLocaleString("id-ID"),
+
+            barang:
+                item.nama,
+
+            jenis:
+                jenis,
+
+            jumlah:
+                jumlah,
+
+            keterangan:
+                keterangan || "-"
+
+        });
+
+
+        simpanData();
+
+
+        document.getElementById(
+            "jumlahTransaksi"
+        ).value = 1;
+
+
+        document.getElementById(
+            "keteranganTransaksi"
+        ).value = "";
+
+
+        tampilkanSemua();
+
+
+        alert(
+            jenis === "masuk"
+                ? "Barang masuk berhasil dicatat."
+                : "Barang keluar berhasil dicatat."
+        );
+
+    }
+
+
+    /*
+    ======================================================
+    RIWAYAT TRANSAKSI
+    ======================================================
+    */
+
+    function tampilkanRiwayat() {
+
+        const tbody =
+            document.getElementById("tabelRiwayat");
+
+
+        tbody.innerHTML = "";
+
+
+        riwayat.forEach((item, index) => {
+
+            const jenisText =
+                item.jenis === "masuk"
+                    ? "📥 MASUK"
+                    : "📤 KELUAR";
+
+
+            tbody.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        ${item.tanggal}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${item.barang}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${jenisText}
+                    </td>
+
+                    <td>
+                        ${item.jumlah}
+                    </td>
+
+                    <td>
+                        ${item.keterangan}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+    /*
+    ======================================================
+    DASHBOARD
+    ======================================================
+    */
+
+    function updateDashboard() {
+
+        const totalJenis =
+            barang.length;
+
+
+        const totalStok =
+            barang.reduce(
+                (total, item) =>
+                    total + item.stok,
+                0
+            );
+
+
+        const nilaiStok =
+            barang.reduce(
+                (total, item) =>
+                    total +
+                    (item.stok * item.hargaBeli),
+                0
+            );
+
+
+        const stokMenipis =
+            barang.filter(
+                item =>
+                    item.stok <= item.stokMinimum
+            ).length;
+
+
+        document.getElementById(
+            "totalJenis"
+        ).textContent = totalJenis;
+
+
+        document.getElementById(
+            "totalStok"
+        ).textContent = totalStok;
+
+
+        document.getElementById(
+            "nilaiStok"
+        ).textContent =
+            rupiah(nilaiStok);
+
+
+        document.getElementById(
+            "stokMenipis"
+        ).textContent =
+            stokMenipis;
+
+    }
+
+
+    /*
+    ======================================================
+    TAMPILKAN SEMUA
+    ======================================================
+    */
+
+    function tampilkanSemua() {
+
+        tampilkanBarang();
+
+        tampilkanRiwayat();
+
+        updateDropdownBarang();
+
+        updateDashboard();
+
+    }
+
+
+    /*
+    ======================================================
+    JALANKAN APLIKASI
+    ======================================================
+    */
+
+    tampilkanSemua();
+
+</script>
+
+</body>
+</html>
+```
