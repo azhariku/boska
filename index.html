@@ -1,372 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stok Barang Pentol Boska</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6f4;color:#1f2937}
-header{background:linear-gradient(135deg,#075e3b,#0b7a4b);color:white;padding:22px 18px}
-header h1{margin:0 0 6px;font-size:25px}
-header p{margin:0;opacity:.9}
-.container{max-width:1100px;margin:auto;padding:18px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-.card{background:white;border-radius:14px;padding:18px;box-shadow:0 3px 12px #00000012}
-.card .label{font-size:13px;color:#6b7280}
-.card .value{font-size:24px;font-weight:bold;margin-top:7px}
-.panel{background:white;border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px #00000012}
-.panel h2{margin:0 0 15px;font-size:19px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}
-button{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:bold}
-.btn-primary{background:#087443;color:white}.btn-danger{background:#dc2626;color:white}
-.btn-secondary{background:#e5e7eb;color:#111827}.btn-warning{background:#f59e0b;color:white}
-input,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;background:white}
-.form-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
-.form-group label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:700px}
-th,td{padding:11px 9px;border-bottom:1px solid #e5e7eb;text-align:left}
-th{background:#f0fdf4;color:#14532d}
-.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:12px;font-weight:bold}
-.masuk{background:#dcfce7;color:#166534}.keluar{background:#fee2e2;color:#991b1b}
-.low{color:#b91c1c;font-weight:bold}
-.empty{text-align:center;color:#6b7280;padding:25px}
-.search{margin-bottom:12px}
-.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:15px;z-index:10}
-.modal-box{background:white;width:100%;max-width:480px;border-radius:15px;padding:20px}
-.modal-box h3{margin-top:0}
-.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6f4;color:#1f2937}
+header{background:#087443;color:#fff;padding:22px}main{max-width:1100px;margin:auto;padding:18px}
+h1{margin:0 0 6px;font-size:25px}.status,.panel,.card{background:#fff;border-radius:14px;box-shadow:0 3px 12px #0001}
+.status{padding:12px;margin-bottom:18px;border-left:4px solid #f59e0b}.ok{border-color:#10b981}.err{border-color:#ef4444}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{padding:18px}.label{font-size:13px;color:#6b7280}.value{font-size:23px;font-weight:bold;margin-top:7px}
+.panel{padding:18px;margin-bottom:18px}.panel h2{margin:0 0 15px;font-size:19px}
+.grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}.group label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+input,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px}button{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer}
+.primary{background:#087443;color:#fff}.danger{background:#dc2626;color:#fff}.secondary{background:#e5e7eb}.warning{background:#f59e0b;color:#fff}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.search{margin-bottom:12px}
+.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:left}th{background:#f0fdf4;color:#14532d}
+.badge{padding:4px 8px;border-radius:20px;font-size:12px;font-weight:bold}.in{background:#dcfce7;color:#166534}.out{background:#fee2e2;color:#991b1b}.low{color:#b91c1c;font-weight:bold}.empty{text-align:center;color:#6b7280;padding:22px}
+.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:15px}.box{background:#fff;border-radius:14px;padding:20px;width:100%;max-width:450px}.right{text-align:right;margin-top:15px}
 footer{text-align:center;color:#6b7280;padding:10px 18px 30px;font-size:13px}
-@media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}}
-@media(max-width:480px){.container{padding:10px}.cards{grid-template-columns:1fr 1fr}.card{padding:13px}.card .value{font-size:19px}header h1{font-size:21px}}
+@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}@media(max-width:480px){header{padding:18px}main{padding:10px}.value{font-size:19px}}
 </style>
 </head>
 <body>
+<header><h1>📦 Stok Barang Pentol Boska</h1><div>Aplikasi stok online dengan Firebase Cloud Firestore.</div></header>
+<main>
+<div id="status" class="status">Menghubungkan ke Firebase...</div>
 
-<header>
-  <div class="container">
-    <h1>📦 Stok Barang Pentol Boska</h1>
-    <p>Aplikasi sederhana untuk mengelola barang masuk, barang keluar, harga, dan stok.</p>
-  </div>
-</header>
-
-<main class="container">
-
-<section class="cards">
-  <div class="card"><div class="label">Jenis Barang</div><div class="value" id="totalJenis">0</div></div>
-  <div class="card"><div class="label">Total Stok</div><div class="value" id="totalStok">0</div></div>
-  <div class="card"><div class="label">Nilai Stok</div><div class="value" id="nilaiStok">Rp 0</div></div>
-  <div class="card"><div class="label">Stok Menipis</div><div class="value" id="stokMenipis">0</div></div>
-</section>
-
-<section class="panel">
-  <h2>➕ Tambah Barang</h2>
-  <form id="formBarang">
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Nama Barang</label>
-        <input id="namaBarang" required placeholder="Contoh: Pentol Original">
-      </div>
-      <div class="form-group">
-        <label>Harga</label>
-        <input id="hargaBarang" type="number" min="0" required placeholder="10000">
-      </div>
-      <div class="form-group">
-        <label>Stok Awal</label>
-        <input id="stokAwal" type="number" min="0" required placeholder="50">
-      </div>
-    </div>
-    <br>
-    <button class="btn-primary" type="submit">Simpan Barang</button>
-  </form>
-</section>
-
-<section class="panel">
-  <h2>📋 Daftar Barang</h2>
-  <div class="search">
-    <input id="cariBarang" placeholder="🔎 Cari nama barang...">
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>No</th><th>Nama Barang</th><th>Harga</th><th>Stok</th><th>Status</th><th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="tabelBarang"></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="panel">
-  <h2>🔄 Transaksi Barang</h2>
-  <div class="actions">
-    <button class="btn-primary" onclick="bukaTransaksi('masuk')">⬆ Barang Masuk</button>
-    <button class="btn-danger" onclick="bukaTransaksi('keluar')">⬇ Barang Keluar</button>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr><th>Tanggal</th><th>Barang</th><th>Jenis</th><th>Jumlah</th><th>Stok Setelah</th></tr>
-      </thead>
-      <tbody id="tabelTransaksi"></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="panel">
-  <h2>⚙ Data</h2>
-  <div class="actions">
-    <button class="btn-secondary" onclick="exportData()">💾 Backup Data</button>
-    <button class="btn-secondary" onclick="importData()">📥 Import Data</button>
-    <button class="btn-warning" onclick="hapusSemuaData()">🗑 Hapus Semua Data</button>
-  </div>
-  <input type="file" id="fileImport" accept=".json" style="display:none">
-</section>
-
-</main>
-
-<footer>Stok Barang Pentol Boska • Data tersimpan di browser perangkat ini.</footer>
-
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h3 id="judulModal">Transaksi</h3>
-    <form id="formTransaksi">
-      <input type="hidden" id="jenisTransaksi">
-      <div class="form-group">
-        <label>Barang</label>
-        <select id="pilihBarang" required></select>
-      </div>
-      <br>
-      <div class="form-group">
-        <label>Jumlah</label>
-        <input id="jumlahTransaksi" type="number" min="1" required>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" onclick="tutupModal()">Batal</button>
-        <button type="submit" class="btn-primary">Simpan Transaksi</button>
-      </div>
-    </form>
-  </div>
+<div class="cards">
+<div class="card"><div class="label">Jenis Barang</div><div id="jenis" class="value">0</div></div>
+<div class="card"><div class="label">Total Stok</div><div id="stok" class="value">0</div></div>
+<div class="card"><div class="label">Nilai Stok</div><div id="nilai" class="value">Rp 0</div></div>
+<div class="card"><div class="label">Stok Menipis</div><div id="menipis" class="value">0</div></div>
 </div>
 
-<script>
-const KEY_BARANG = "boska_barang_v1";
-const KEY_TRANSAKSI = "boska_transaksi_v1";
+<section class="panel">
+<h2>➕ Tambah Barang</h2>
+<form id="barangForm"><div class="grid">
+<div class="group"><label>Nama Barang</label><input id="nama" required placeholder="Contoh: Pentol Original"></div>
+<div class="group"><label>Harga</label><input id="harga" type="number" min="0" required></div>
+<div class="group"><label>Stok Awal</label><input id="stokAwal" type="number" min="0" required></div>
+</div><br><button class="primary">Simpan Barang</button></form>
+</section>
 
-let barang = JSON.parse(localStorage.getItem(KEY_BARANG)) || [
-  {id: Date.now()+1, nama:"Pentol Original", harga:10000, stok:50},
-  {id: Date.now()+2, nama:"Pentol Jumbo", harga:15000, stok:30},
-  {id: Date.now()+3, nama:"Tahu", harga:2000, stok:45},
-  {id: Date.now()+4, nama:"Saus", harga:8000, stok:20}
-];
+<section class="panel">
+<h2>📋 Daftar Barang</h2><div class="search"><input id="cari" placeholder="🔎 Cari barang..."></div>
+<div class="table"><table><thead><tr><th>No</th><th>Nama</th><th>Harga</th><th>Stok</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="barangTabel"></tbody></table></div>
+</section>
 
-let transaksi = JSON.parse(localStorage.getItem(KEY_TRANSAKSI)) || [];
+<section class="panel">
+<h2>🔄 Transaksi Barang</h2>
+<div class="actions"><button class="primary" onclick="transaksiModal('masuk')">⬆ Barang Masuk</button><button class="danger" onclick="transaksiModal('keluar')">⬇ Barang Keluar</button></div>
+<div class="table"><table><thead><tr><th>Tanggal</th><th>Barang</th><th>Jenis</th><th>Jumlah</th><th>Stok Setelah</th></tr></thead><tbody id="transaksiTabel"></tbody></table></div>
+</section>
 
-function rupiah(n){
-  return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n||0);
+<section class="panel">
+<h2>💾 Backup & Data</h2>
+<div class="actions"><button class="secondary" onclick="backup()">💾 Backup JSON</button><button class="secondary" onclick="document.getElementById('file').click()">📥 Import JSON</button></div>
+<input id="file" type="file" accept=".json" hidden>
+<small>Data utama tersimpan di Firebase. JSON hanya sebagai cadangan.</small>
+</section>
+</main>
+
+<footer>Stok Barang Pentol Boska • Firebase Cloud Firestore</footer>
+
+<div id="modal" class="modal"><div class="box"><h3 id="judul"></h3>
+<form id="trxForm"><input id="jenis" type="hidden">
+<div class="group"><label>Barang</label><select id="pilih" required></select></div><br>
+<div class="group"><label>Jumlah</label><input id="jumlah" type="number" min="1" required></div>
+<div class="right"><button type="button" class="secondary" onclick="tutup()">Batal</button> <button class="primary">Simpan</button></div>
+</form></div></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import{getFirestore,collection,getDocs,addDoc,doc,setDoc,deleteDoc,query,orderBy,serverTimestamp,runTransaction}from"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyAn8OBBT450LFREq_FKno1gzH8Bj_QpXms",
+authDomain:"stok-barang-boska.firebaseapp.com",
+projectId:"stok-barang-boska",
+storageBucket:"stok-barang-boska.firebasestorage.app",
+messagingSenderId:"290979694122",
+appId:"1:290979694122:web:ce1fa6dcf99428d784a553",
+measurementId:"G-PJLPPW1QX9"
+};
+const app=initializeApp(firebaseConfig),db=getFirestore(app);
+const barangRef=collection(db,"barang"),trxRef=collection(db,"transaksi");
+let barang=[],transaksi=[];
+const $=x=>document.getElementById(x);
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n||0);
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+async function muat(){
+try{
+let[a,b]=await Promise.all([getDocs(barangRef),getDocs(query(trxRef,orderBy("waktu","desc")))]);
+barang=a.docs.map(x=>({id:x.id,...x.data()}));transaksi=b.docs.map(x=>({id:x.id,...x.data()}));render();
+$("status").textContent="✓ Terhubung ke Firebase. Data tersimpan online.";$("status").className="status ok";
+}catch(e){console.error(e);render();$("status").textContent="✕ Firebase belum bisa diakses: "+e.message;$("status").className="status err"}
 }
-
-function simpan(){
-  localStorage.setItem(KEY_BARANG, JSON.stringify(barang));
-  localStorage.setItem(KEY_TRANSAKSI, JSON.stringify(transaksi));
-}
-
 function render(){
-  const cari = document.getElementById("cariBarang").value.toLowerCase().trim();
-  const data = barang.filter(b=>b.nama.toLowerCase().includes(cari));
-  const tbody = document.getElementById("tabelBarang");
-
-  if(!data.length){
-    tbody.innerHTML='<tr><td colspan="6" class="empty">Belum ada barang.</td></tr>';
-  }else{
-    tbody.innerHTML=data.map((b,i)=>`
-      <tr>
-        <td>${i+1}</td>
-        <td><strong>${escapeHTML(b.nama)}</strong></td>
-        <td>${rupiah(b.harga)}</td>
-        <td class="${b.stok<=5?'low':''}">${b.stok}</td>
-        <td>${b.stok<=5?'<span class="badge keluar">Menipis</span>':'<span class="badge masuk">Aman</span>'}</td>
-        <td>
-          <button class="btn-secondary" onclick="editBarang(${b.id})">Edit</button>
-          <button class="btn-danger" onclick="hapusBarang(${b.id})">Hapus</button>
-        </td>
-      </tr>`).join("");
-  }
-
-  document.getElementById("totalJenis").textContent=barang.length;
-  document.getElementById("totalStok").textContent=barang.reduce((a,b)=>a+b.stok,0);
-  document.getElementById("nilaiStok").textContent=rupiah(barang.reduce((a,b)=>a+(b.harga*b.stok),0));
-  document.getElementById("stokMenipis").textContent=barang.filter(b=>b.stok<=5).length;
-
-  const tt=document.getElementById("tabelTransaksi");
-  if(!transaksi.length){
-    tt.innerHTML='<tr><td colspan="5" class="empty">Belum ada transaksi.</td></tr>';
-  }else{
-    tt.innerHTML=transaksi.slice().reverse().map(t=>`
-      <tr>
-        <td>${t.tanggal}</td>
-        <td>${escapeHTML(t.nama)}</td>
-        <td><span class="badge ${t.jenis==='masuk'?'masuk':'keluar'}">${t.jenis==='masuk'?'MASUK':'KELUAR'}</span></td>
-        <td>${t.jumlah}</td>
-        <td>${t.stokSetelah}</td>
-      </tr>`).join("");
-  }
+let q=$("cari").value.toLowerCase(),d=barang.filter(x=>String(x.nama||"").toLowerCase().includes(q));
+$("barangTabel").innerHTML=d.length?d.map((b,i)=>`<tr><td>${i+1}</td><td><b>${esc(b.nama)}</b></td><td>${rupiah(b.harga)}</td><td class="${b.stok<=5?"low":""}">${b.stok}</td><td><span class="badge ${b.stok<=5?"out":"in"}">${b.stok<=5?"Menipis":"Aman"}</span></td><td><button class="secondary" onclick="editBarang('${b.id}')">Edit</button> <button class="danger" onclick="hapusBarang('${b.id}')">Hapus</button></td></tr>`).join(""):'<tr><td colspan="6" class="empty">Belum ada barang.</td></tr>';
+$("jenis").textContent=barang.length;$("stok").textContent=barang.reduce((a,b)=>a+(+b.stok||0),0);
+$("nilai").textContent=rupiah(barang.reduce((a,b)=>a+(+b.harga||0)*(+b.stok||0),0));$("menipis").textContent=barang.filter(b=>(+b.stok||0)<=5).length;
+$("transaksiTabel").innerHTML=transaksi.length?transaksi.map(t=>`<tr><td>${esc(t.tanggal||"-")}</td><td>${esc(t.nama||"-")}</td><td><span class="badge ${t.jenis==="masuk"?"in":"out"}">${t.jenis==="masuk"?"MASUK":"KELUAR"}</span></td><td>${t.jumlah}</td><td>${t.stokSetelah}</td></tr>`).join(""):'<tr><td colspan="5" class="empty">Belum ada transaksi.</td></tr>';
 }
-
-function escapeHTML(text){
-  return String(text).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
-
-document.getElementById("formBarang").addEventListener("submit",function(e){
-  e.preventDefault();
-  const nama=document.getElementById("namaBarang").value.trim();
-  const harga=Number(document.getElementById("hargaBarang").value);
-  const stok=Number(document.getElementById("stokAwal").value);
-
-  if(!nama || harga<0 || stok<0) return alert("Periksa data barang.");
-
-  if(barang.some(b=>b.nama.toLowerCase()===nama.toLowerCase())){
-    return alert("Nama barang sudah ada.");
-  }
-
-  barang.push({id:Date.now(),nama,harga,stok});
-  simpan();
-  this.reset();
-  render();
-  alert("Barang berhasil ditambahkan.");
-});
-
-function editBarang(id){
-  const b=barang.find(x=>x.id===id);
-  if(!b) return;
-  const nama=prompt("Nama barang:",b.nama);
-  if(nama===null) return;
-  const harga=prompt("Harga:",b.harga);
-  if(harga===null) return;
-  const stok=prompt("Stok:",b.stok);
-  if(stok===null) return;
-
-  if(!nama.trim() || Number(harga)<0 || Number(stok)<0){
-    return alert("Data tidak valid.");
-  }
-
-  b.nama=nama.trim();
-  b.harga=Number(harga);
-  b.stok=Number(stok);
-  simpan();
-  render();
-}
-
-function hapusBarang(id){
-  const b=barang.find(x=>x.id===id);
-  if(!b) return;
-  if(confirm(`Hapus barang "${b.nama}"?`)){
-    barang=barang.filter(x=>x.id!==id);
-    simpan();
-    render();
-  }
-}
-
-function bukaTransaksi(jenis){
-  if(!barang.length) return alert("Tambahkan barang terlebih dahulu.");
-  document.getElementById("jenisTransaksi").value=jenis;
-  document.getElementById("judulModal").textContent=jenis==="masuk"?"⬆ Barang Masuk":"⬇ Barang Keluar";
-
-  const select=document.getElementById("pilihBarang");
-  select.innerHTML=barang.map(b=>`<option value="${b.id}">${escapeHTML(b.nama)} — stok ${b.stok}</option>`).join("");
-  document.getElementById("jumlahTransaksi").value="";
-  document.getElementById("modal").style.display="flex";
-}
-
-function tutupModal(){
-  document.getElementById("modal").style.display="none";
-}
-
-document.getElementById("formTransaksi").addEventListener("submit",function(e){
-  e.preventDefault();
-  const jenis=document.getElementById("jenisTransaksi").value;
-  const id=Number(document.getElementById("pilihBarang").value);
-  const jumlah=Number(document.getElementById("jumlahTransaksi").value);
-  const b=barang.find(x=>x.id===id);
-
-  if(!b || jumlah<=0) return alert("Data transaksi tidak valid.");
-
-  if(jenis==="keluar" && jumlah>b.stok){
-    return alert(`Stok tidak cukup. Stok ${b.nama} saat ini hanya ${b.stok}.`);
-  }
-
-  if(jenis==="masuk") b.stok+=jumlah;
-  else b.stok-=jumlah;
-
-  transaksi.push({
-    id:Date.now(),
-    tanggal:new Date().toLocaleString("id-ID"),
-    nama:b.nama,
-    jenis,
-    jumlah,
-    stokSetelah:b.stok
-  });
-
-  simpan();
-  tutupModal();
-  render();
-});
-
-document.getElementById("cariBarang").addEventListener("input",render);
-
-document.getElementById("fileImport").addEventListener("change",function(){
-  const file=this.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const data=JSON.parse(e.target.result);
-      if(!Array.isArray(data.barang)||!Array.isArray(data.transaksi)) throw new Error();
-      barang=data.barang;
-      transaksi=data.transaksi;
-      simpan();
-      render();
-      alert("Data berhasil diimport.");
-    }catch(err){
-      alert("File backup tidak valid.");
-    }
-    document.getElementById("fileImport").value="";
-  };
-  reader.readAsText(file);
-});
-
-function exportData(){
-  const data={barang,transaksi};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="backup-stok-boska.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importData(){
-  document.getElementById("fileImport").click();
-}
-
-function hapusSemuaData(){
-  if(confirm("Yakin menghapus SEMUA barang dan riwayat transaksi? Data tidak dapat dikembalikan kecuali Anda memiliki backup.")){
-    barang=[];
-    transaksi=[];
-    simpan();
-    render();
-  }
-}
-
-window.addEventListener("click",function(e){
-  if(e.target===document.getElementById("modal")) tutupModal();
-});
-
-simpan();
-render();
+$("barangForm").onsubmit=async e=>{e.preventDefault();let n=$("nama").value.trim(),h=+$("harga").value,s=+$("stokAwal").value;if(!n||h<0||s<0)return;
+if(barang.some(b=>String(b.nama).toLowerCase()===n.toLowerCase()))return alert("Nama barang sudah ada.");
+try{await addDoc(barangRef,{nama:n,harga:h,stok:s,createdAt:serverTimestamp()});e.target.reset();await muat();alert("Barang berhasil disimpan.");}catch(x){alert("Gagal menyimpan: "+x.message)}};
+window.editBarang=async id=>{let b=barang.find(x=>x.id===id);if(!b)return;let n=prompt("Nama barang:",b.nama);if(n===null)return;let h=prompt("Harga:",b.harga);if(h===null)return;let s=prompt("Stok:",b.stok);if(s===null)return;
+if(!n.trim()||+h<0||+s<0)return alert("Data tidak valid.");try{await setDoc(doc(db,"barang",id),{nama:n.trim(),harga:+h,stok:+s},{merge:true});await muat()}catch(e){alert("Gagal mengubah: "+e.message)}};
+window.hapusBarang=async id=>{let b=barang.find(x=>x.id===id);if(b&&confirm("Hapus barang ""+b.nama+""?"))try{await deleteDoc(doc(db,"barang",id));await muat()}catch(e){alert("Gagal menghapus: "+e.message)}};
+window.transaksiModal=jenis=>{if(!barang.length)return alert("Tambahkan barang dahulu.");$("jenis").value=jenis;$("judul").textContent=jenis==="masuk"?"⬆ Barang Masuk":"⬇ Barang Keluar";$("pilih").innerHTML=barang.map(b=>`<option value="${b.id}">${esc(b.nama)} — stok ${b.stok}</option>`).join("");$("jumlah").value="";$("modal").style.display="flex"};
+window.tutup=()=>{$("modal").style.display="none"};
+$("trxForm").onsubmit=async e=>{e.preventDefault();let jenis=$("jenis").value,id=$("pilih").value,jumlah=+$("jumlah").value;if(jumlah<=0)return;
+try{let ref=doc(db,"barang",id),hasil;await runTransaction(db,async tx=>{let s=await tx.get(ref);if(!s.exists())throw Error("Barang tidak ditemukan.");let b=s.data(),lama=+b.stok||0,baru=jenis==="masuk"?lama+jumlah:lama-jumlah;if(jenis==="keluar"&&jumlah>lama)throw Error("Stok hanya "+lama+".");tx.update(ref,{stok:baru});hasil={nama:b.nama,stokSetelah:baru}});
+await addDoc(trxRef,{nama:hasil.nama,jenis,jumlah,stokSetelah:hasil.stokSetelah,tanggal:new Date().toLocaleString("id-ID"),waktu:serverTimestamp()});tutup();await muat();alert("Transaksi berhasil disimpan.")}catch(x){alert("Transaksi gagal: "+x.message)}};
+$("cari").oninput=render;
+window.backup=async()=>{await muat();let blob=new Blob([JSON.stringify({barang,transaksi,backupDibuat:new Date().toISOString()},null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="backup-stok-boska.json";a.click();URL.revokeObjectURL(u)};
+$("file").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=async x=>{try{let d=JSON.parse(x.target.result);if(!Array.isArray(d.barang)||!Array.isArray(d.transaksi))throw Error("Format tidak valid.");if(!confirm("Import "+d.barang.length+" barang dan "+d.transaksi.length+" transaksi ke Firebase?"))return;
+for(let b of d.barang){let id=b.id||crypto.randomUUID();await setDoc(doc(db,"barang",id),{nama:b.nama,harga:+b.harga||0,stok:+b.stok||0},{merge:true})}
+for(let t of d.transaksi){let id=t.id||crypto.randomUUID();await setDoc(doc(db,"transaksi",id),{nama:t.nama,jenis:t.jenis,jumlah:+t.jumlah||0,stokSetelah:+t.stokSetelah||0,tanggal:t.tanggal||"-",waktu:serverTimestamp()},{merge:true})}
+await muat();alert("Import berhasil.")}catch(err){alert("Import gagal: "+err.message)}finally{e.target.value=""}};r.readAsText(f)};
+$("modal").onclick=e=>{if(e.target===$("modal"))tutup()};muat();
 </script>
-</body>
-</html>
+</body></html>
